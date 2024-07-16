@@ -20,7 +20,7 @@ This way, I don't have to mess around with graphic functions again and again if 
 All neccessary files are located in the `/src` folder.
 The `/src/lib` folder contains the TextBox class for import and a SSD1306-OLED-Driver and a ST7735R-TFT-Driver.
 The `/lib` folder needs to be copied onto the RPI using Thonny. 
-The other files in the `/src` directory are examples demonstrating the use of TextBox on OLED / TFT displays.
+**The other files in the `/src` directory are complete examples demonstrating the use of TextBox on OLED / TFT displays.**
 
 Import TextBox and drivers in your programm:
 ```python
@@ -179,6 +179,28 @@ This causes the whole TextBox to be redrawn.
 ```python
     """ Same commands for use with OLED and TFT displays """
     BOX_1.delete_line(line_1)
+```
+
+### Invert lines
+
+Call `TextBox.invert_color(line_handle)` to swap the foreground and the background color of a text line. 
+This can be used to highlight a line.
+ 
+```python
+    """ Same commands for use with OLED and TFT displays """
+    BOX_1.invert_line(line_1)
+```
+
+### Box position and height
+
+The vertical position and the height of a TextBox can be obtained via `TextBox.box_y` and `TextBox.box_h `.
+This can be used to position a second box underneath an existing box.
+ 
+```python
+    """ Same commands for use with OLED and TFT displays """
+    # Calculate position of second box.
+    # Place it five pixel below first box.
+    pos_2 = BOX_1.box_y + BOX_1.box_h + 5
 ```
 
 ## Examples
