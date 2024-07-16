@@ -121,6 +121,45 @@ class TFT():
 
 </details>
 
+Initialize display and pass the display object to TextBox.
+Initialization is slightly different for OLED and TFT.
+
+
+```python
+    """ Use with OLED display:
+    Initialize OLED display, then initialize first TextBox and pass display handle. """
+    OLED = OLED(DISPLAY_SCL_PIN, DISPLAY_SDA_PIN)
+    BOX_1 = TextBoxOLED(OLED.display_object(), caption = 'Box 1', pos = 0)
+
+
+    """ Use with TFT display:
+    Initialize TFT display, then initialize first TextBox and pass display handle. """
+    TFT = TFT(clk = TFT_CLK_PIN, mosi = TFT_MOSI_PIN, miso = TFT_MISO_PIN,
+                     cs = TFT_CS_PIN, dc = TFT_DC_PIN, rst = TFT_RST_PIN,
+                     blk = TFT_BLK_PIN)
+
+    BOX_1 = TextBoxTFT(TFT.display_object(), caption = 'Ambient Data', pos = 5,
+                        fg_color = (0, 255, 0), bg_color = ((0,) * 3))
+```
+
+After initialization, the same commands apply to the OLED and the TFT version.
+
+
+### Add lines
+
+When creating lines, a handle is returned representing each line.
+The handle can be used to address individual lines for later updates or deletion.
+After all lines are added, call the `show()` command to draw the box.
+The dimensions of the box are calculated automatically.
+
+```python
+    """ Same commands for use with OLED and TFT displays """
+    line_1 = BOX_1.add_line('A')
+    line_2 = BOX_1.add_line('B')
+    BOX_1.show()
+```
+
+
 
 ## Examples
 
