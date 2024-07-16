@@ -159,7 +159,27 @@ The dimensions of the box are calculated automatically.
     BOX_1.show()
 ```
 
+### Update lines
 
+Call `TextBox.update_line(line_handle, 'New Text')` to update the content of a line or `TextBox.update_caption('New Caption')`.
+Only the FrameBuffer of the line is updated to enhance performance. An update of the whole screen is not neccessary.
+
+```python
+    """ Same commands for use with OLED and TFT displays """
+    BOX_1.update_line(line_1, 'New Text')
+    BOX_1.update_caption('New Caption')
+```
+
+### Delete lines
+
+Call `TextBox.delete_line(line_handle)` to delete a line. 
+The size of the TextBox is adjusted automatically and the order of the remaining lines is preserved.
+This causes the whole TextBox to be redrawn.
+
+```python
+    """ Same commands for use with OLED and TFT displays """
+    BOX_1.delete_line(line_1)
+```
 
 ## Examples
 
