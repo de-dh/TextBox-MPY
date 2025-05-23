@@ -2,6 +2,8 @@ from framebuf import FrameBuffer, MONO_VLSB, RGB565
 import gc
 
 """
+V2 - 23.05.2025
+
 Creates a full-width TextBox on a FrameBuffer-driven display.
 The TextBox has a caption and it can have multiple lines containing text.
 The height of the TextBox is adjusted to fit the lines of text.
@@ -10,7 +12,7 @@ updating of the text without flickering of the display.
 I have tested this on a SSD1306 OLED Display and a ST7735R-driven
 TFT display. Use subclasses acording to the display:
 
-    TextBoxTFT 	- ST7735R-driven RGB 128 * 160 TFT display
+    TextBoxTFT - ST7735R-driven RGB 128 * 160 TFT display
     TextBoxOLED - SSD1306 128 * 64 OLED Display
         --> Display width and height can be adjusted in class definition
         
@@ -21,7 +23,7 @@ TFT display. Use subclasses acording to the display:
                  
         MyBox = TextBoxOLED(display, caption = '', pos = 0)
         
-        Parameters: display: 	Display object obtained from SSD1306
+        Parameters: display:    Display object obtained from SSD1306
                                 driver / ST7735R driver: object
                                 
                                 e. g.:
@@ -31,40 +33,40 @@ TFT display. Use subclasses acording to the display:
                                    
                                 display = ssd1306.SSD1306_I2C(width, height, i2c)
                                 
-                    caption: 	Caption of the TextBox: string
-                    pos:		Vertical position of the TextBox: int
-                    fg_color :	Foreground color, RGB tuple: tuple
-                    bg_color :	Background color, RGB tuple: tuple
+                    caption: Caption of the TextBox: string
+                    pos: Vertical position of the TextBox: int
+                    fg_color : Foreground color, RGB tuple: tuple
+                    bg_color : Background color, RGB tuple: tuple
     
     Methods:
     
-         line = MyBox. 				content: Text content of the line: str
-            add_line(content):      line: line-id for later updates: var
-                                    -> Must be called before show()
+         line = MyBox.          content: Text content of the line: str
+            add_line(content):  line: line-id for later updates: var
+                                -> Must be called before show()
             
-        MyBox.show(): 				Calculate the box size and line positions
-                                    and draw the box. Must be called after add_line()
-                                    or if redraw is neccessary
+        MyBox.show(): Calculate the box size and line positions
+                      and draw the box. Must be called after add_line()
+                      or if redraw is neccessary
                                     
-        MyBox.clear(): 				Clear / Hide the box.
+        MyBox.clear(): Clear / Hide the box.
         
-        MyBox.set_pos(pos): 		pos: vertical position of the Box: int
+        MyBox.set_pos(pos): pos: vertical position of the Box: int
                                     
-        MyBox.update_caption(txt):	txt: Text to update the caption with: str
+        MyBox.update_caption(txt): txt: Text to update the caption with: str
         
-        MyBox.update_line(line, txt):	line: line-id: var
+        MyBox.update_line(line, txt): line: line-id: var
                                         txt: Text to update the line with: str
                                         
-        MyBox.invert_color(line):	line: line-id: var
+        MyBox.invert_color(line): line: line-id: var
                                     -> switches fg and bg color of line
                                     e. g. for marking line as 'selected'
                                     
-        MyBox.delete_line(line):	line: line-id: var
+        MyBox.delete_line(line): line: line-id: var
                                     -> Delete line
     
     Properties:        
-        MyBox.box_y				:	Vertical position of the box
-        MyBox.box_h				:	Height of the box
+        MyBox.box_y: Vertical position of the box
+        MyBox.box_h: Height of the box
                                     
         
         
@@ -227,6 +229,7 @@ class TextBox:
     def update_line(self, lid, content):
         _lid = str(lid)
         if _lid in self.lines:
+            self.lines[_lid].clear_line()
             self.lines[_lid].set_text_line(str(content))
             self.lines[_lid].show_line(self.display, self._abs_pos(_lid))
             self.display.show()
@@ -274,8 +277,8 @@ class TextBox:
         # (neccessary for invert function)
         # when fg_ and bg_color have changed
         def set_text_line(self, content = None):
-            if content:
-                self.content = content
+            
+            self.content = ' ' if content is None else content
                 
             self.clear_line()
             
@@ -290,9 +293,9 @@ class TextBox:
 '''
 Creates a two-colored Textbox on a TFT Display using ST7735R driver
 
-display	 = TFT display object
-caption	 = caption of the Textbox
-pos 	 = vertical position of the Textbox
+display = TFT display object
+caption = caption of the Textbox
+pos = vertical position of the Textbox
 fg_color = foreground color, set as tuple (r, g, b)
 bg_color = background color, set as tuple (r, g, b)
 '''
@@ -318,7 +321,7 @@ class TextBoxTFT(TextBox):
         _r, _g, _b = _rgb
         return self.display.rgb(_r, _g, _b)
     
-    # Create RGB-FrameBuffer for TFT
+    # Create RGB565-FrameBuffer for TFT
     def buffer(self, width, height):
         return FrameBuffer(bytearray(width * height * 2), width, height, RGB565)
 
@@ -326,9 +329,9 @@ class TextBoxTFT(TextBox):
 '''
 Creates a black-white text box on a SSD1306 OLED Display
 
-display	 = OLED display object
-caption	 = caption of the Textbox
-pos 	 = vertical position of the Textbox
+display = OLED display object
+caption = caption of the Textbox
+pos = vertical position of the Textbox
 '''
 class TextBoxOLED(TextBox):
     def __init__(self, display, caption = '', pos = 0):
